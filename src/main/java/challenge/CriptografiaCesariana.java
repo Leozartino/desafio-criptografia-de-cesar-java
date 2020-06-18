@@ -2,54 +2,59 @@ package challenge;
 
 public class CriptografiaCesariana implements Criptografia {
     static int salto = 3;
+    static int valorIntervaloA;
+    static int valorIntervaloB;
+    static int valorIntervaloC;
+    static int valorIntervaloD;
+    static int valorFormula;
 
     @Override
     public String criptografar(String texto) {
 
-        validaTexto(texto);
-
-        char[] textoParaChar = texto.toLowerCase().toCharArray();
-        int tamanhoTexto = textoParaChar.length;
-        char[] textoCharCifrado = new char[tamanhoTexto];
-
-        for (int index = 0; index < tamanhoTexto; index++) {
-            if (textoParaChar[index] >= 97 && textoParaChar[index] <= 119) {
-                textoCharCifrado[index] = (char) (textoParaChar[index] + salto);
-            } else if (textoParaChar[index] > 119 && textoParaChar[index] <= 122) {
-                textoCharCifrado[index] = (char) (textoParaChar[index] - 23);
-            } else {
-                textoCharCifrado[index] = textoParaChar[index];
-            }
-
-        }
-
-        String textoCifrado = new String(textoCharCifrado);
-        return textoCifrado;
+        return algoritmoCesar(texto, salto);
 
     }
 
     @Override
     public String descriptografar(String texto) {
 
+        return algoritmoCesar(texto, -salto);
+
+    }
+
+    private String algoritmoCesar(String texto, int salto) {
         validaTexto(texto);
 
         char[] textoParaChar = texto.toLowerCase().toCharArray();
         int tamanhoTexto = textoParaChar.length;
-        char[] textoCharCifrado = new char[tamanhoTexto];
+        char[] textoCharMensagem = new char[tamanhoTexto];
+
+        if (salto < 0) {
+            valorIntervaloA = 100;
+            valorIntervaloB = 122;
+            valorIntervaloC = 97;
+            valorIntervaloD = 100;
+            valorFormula = 23;
+        } else {
+            valorIntervaloA = 97;
+            valorIntervaloB = 119;
+            valorIntervaloC = 119;
+            valorIntervaloD = 122;
+            valorFormula = -23;
+        }
 
         for (int i = 0; i < tamanhoTexto; i++) {
-            if (textoParaChar[i] >= 100 && textoParaChar[i] <= 122) {
-                textoCharCifrado[i] = (char) (textoParaChar[i] - salto);
-            } else if (textoParaChar[i] >= 97 && textoParaChar[i] < 100) {
-                textoCharCifrado[i] = (char) (textoParaChar[i] + 23);
+            if (textoParaChar[i] >= valorIntervaloA && textoParaChar[i] <= valorIntervaloB) {
+                textoCharMensagem[i] = (char) (textoParaChar[i] + salto);
+            } else if (textoParaChar[i] >= valorIntervaloC && textoParaChar[i] < valorIntervaloD) {
+                textoCharMensagem[i] = (char) (textoParaChar[i] + valorFormula);
             } else {
-                textoCharCifrado[i] = textoParaChar[i];
+                textoCharMensagem[i] = textoParaChar[i];
             }
         }
 
-        String textoCifrado = new String(textoCharCifrado);
-        return textoCifrado;
-
+        String textoResultante = new String(textoCharMensagem);
+        return textoResultante;
     }
 
     private void validaTexto(String texto) {
